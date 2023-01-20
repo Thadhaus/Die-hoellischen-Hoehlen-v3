@@ -16,104 +16,108 @@ NUMBER_OF_ROOMS = 2342
 
 
 def check_key():
-    print("This passage is locked. ", end='')
-    key = input("Do you have the key? ").lower()
-    if key in ["j", "ja", "y", "yes"]:
-        return True
-    else:
-        return False
+	print("This passage is locked. ", end='')
+	key = input("Do you have the key? ").lower()
+	if key in ["j", "ja", "y", "yes"]:
+		return True
+	else:
+		return False
 
 
 def take(raum):
-    global hungerstatus
-    global rauminhalt
-    ding = input("What do you want to take? ").lower().rstrip()
-    anzahl, zeug = rauminhalt[raum].split(' ', 1)
-    if int(anzahl) > 0:
-        if ding == zeug:
-            if zeug == 'lichen':
-                print(
-                    "After creeping around such long time in these caves even lichen taste good."
-                )
-                hungerstatus += random.randint(7, 24)
-                rauminhalt[raum] = f"{int(anzahl) - 1} {zeug}"
-            else:
-                print(
-                    f"Each of the {anzahl} {zeug} is too heavy to take with you."
-                )
-        else:
-            print("I see here no %s" % (ding))
-    else:
-        print(f"There are no more {zeug} left.")
-    return False
+	global hungerstatus
+	global rauminhalt
+	ding = input("What do you want to take? ").lower().rstrip()
+	anzahl, zeug = rauminhalt[raum].split(' ', 1)
+	if int(anzahl) > 0:
+		if ding == zeug:
+			if zeug == 'lichen':
+				print(
+				    "After creeping around such long time in these caves even lichen taste good."
+				)
+				hungerstatus += random.randint(7, 24)
+				rauminhalt[raum] = f"{int(anzahl) - 1} {zeug}"
+			else:
+				print(
+				    f"Each of the {anzahl} {zeug} is too heavy to take with you."
+				)
+		else:
+			print("I see here no %s" % (ding))
+	else:
+		print(f"There are no more {zeug} left.")
+	return False
 
 
 def check_starvation(hungerlevel):
-    if hungerlevel < 1:
-        print("You die from lack of food ...")
-        return True
-    elif hungerlevel < 10:
-        print("You are so weak that you can hardly walk.")
-    elif hungerlevel < 20:
-        print(
-            "Your stomach growls so loudly that you are afraid of attracting monsters."
-        )
-    elif hungerlevel < 50:
-        print("You feel weak. Something to eat would be great now.")
-    else:
-        print("You are full and happy.")
-    return False
+	if hungerlevel < 1:
+		print("You die from lack of food ...")
+		return True
+	elif hungerlevel < 10:
+		print("You are so weak that you can hardly walk.")
+	elif hungerlevel < 20:
+		print(
+		    "Your stomach growls so loudly that you are afraid of attracting monsters."
+		)
+	elif hungerlevel < 50:
+		print("You feel weak. Something to eat would be great now.")
+	else:
+		print("You are full and happy.")
+	return False
 
 
 def pray():
-    print("A strange trembling passes through the room.")
-    verbindungen_erzeugen()
+	print("A strange trembling passes through the room.")
+	verbindungen_erzeugen()
 
 
 def zeige_rauminhalt():
-    inhalt = rauminhalt[current_room]
-    print(inhalt)
+	inhalt = rauminhalt[current_room]
+	print(inhalt)
 
 
 def quit():
-    print("There is a bang. Smoke rises. You faint.")
-    for i in range(3):
-        time.sleep(1)
-        print(".", end="")
-        sys.stdout.flush()
-    print("\n\nYou wake up in a meadow of flowers and wonder:")
-    print("Was I really in those strange caves")
-    print("or was it all just a strange dream?")
+	print("There is a bang. Smoke rises. You faint.")
+	for i in range(3):
+		time.sleep(1)
+		print(".", end="")
+		sys.stdout.flush()
+	print("\n\nYou wake up in a meadow of flowers and wonder:")
+	print("Was I really in those strange caves")
+	print("or was it all just a strange dream?")
 
 
 def usage():
-    print("\tThe following command words are known to the system:\n\n\t",
-          end="")
-    for wort in allowed_commands:
-        if wort == "where am i" or wort == 'where to go':
-            pass
-        else:
-            print("{} ".format(wort), end="")
-    print("\n")
+	print("\tThe following command words are known to the system:\n\n\t",
+	      end="")
+	for wort in allowed_commands:
+		if wort == "where am i" or wort == 'where to go':
+			pass
+		else:
+			print("{} ".format(wort), end="")
+	print("\n")
 
 
 def generate_graphviz_file():
-    print("Well, there are no maps to show...")
-    import os
-    import glob
-    import generiere_karte
-    os.system("mkdir -p Hoelle-Karten")
-    result = glob.glob(r"Hoelle-Karten/*.py")
-    if len(result) > 0:
-        print(f"Welche Datei soll in einen Graphen umgewandelt werden?")
-        for i in range(len(result)):
-            print(f"{i+1} : {result[i]}")
-        num = int(input("Gib mir die Nummer deiner Wunschdatei: "))
-        wunschdatei = result[num - 1]
-        generiere_karte.hauptprogramm(wunschdatei)
-        antwort = input(f"Die Datei {wunschdatei} jetzt löschen?").lower()
-        if antwort in ['y', 'j', 'yes', 'ja']:
-            os.system(f"rm -f {wunschdatei}")
+	import os
+	import glob
+	import generiere_karte
+	os.system("mkdir -p Hoelle-Karten")
+	datei = open(f"Hoelle-Karten/{time.time()}.py", "w")
+	for key, value in compass.items():
+		datei.write(f"{key} = {value}\n")
+	datei.flush()
+	datei.close()
+	result = glob.glob(r"Hoelle-Karten/*.py")
+	if len(result) > 0:
+		print(f"Welche Datei soll in einen Graphen umgewandelt werden?")
+		for i in range(len(result)):
+			print(f"{i+1} : {result[i]}")
+		num = int(input("Gib mir die Nummer deiner Wunschdatei: "))
+		wunschdatei = result[num - 1]
+		generiere_karte.hauptprogramm(wunschdatei)
+		antwort = input(f"Die Datei {wunschdatei} jetzt löschen? ").lower()
+		if antwort in ['y', 'j', 'yes', 'ja']:
+			os.system(f"rm -f {wunschdatei}")
 
 
 # w a s d as usual; j -> down; k -> up; q -> quit
@@ -124,20 +128,20 @@ allowed_commands = [
 
 
 def create_roomlist():
-    roomlist = []
-    for num in range(NUMBER_OF_ROOMS):
-        roomlist.append(f"R{num}")
-    return roomlist
+	roomlist = []
+	for num in range(NUMBER_OF_ROOMS):
+		roomlist.append(f"R{num}")
+	return roomlist
 
 
 raumliste = create_roomlist()
 
 
 def generiere_ziel():
-    if random.random() > 0.50:
-        return raumliste[random.randrange(len(raumliste))]
-    else:
-        return None
+	if random.random() > 0.50:
+		return raumliste[random.randrange(len(raumliste))]
+	else:
+		return None
 
 
 north = {}
@@ -149,23 +153,23 @@ downstairs = {}
 
 
 def verbindungen_erzeugen():
-    for raum in raumliste:
-        for richtung in east, west, north, south, upstairs, downstairs:
-            richtung[raum] = generiere_ziel()
+	for raum in raumliste:
+		for richtung in east, west, north, south, upstairs, downstairs:
+			richtung[raum] = generiere_ziel()
 
 
 def verbindungen_anzeigen(raum):
-    print(f"Verbindungen: ", end='')
-    for richtung in north, west, south, east, downstairs, upstairs:
-        print(f"{richtung[raum]} ", end='')
-    print("")
+	print(f"Verbindungen: ", end='')
+	for richtung in north, west, south, east, downstairs, upstairs:
+		print(f"{richtung[raum]} ", end='')
+	print("")
 
 
 def generate_locked_rooms():
-    my_list = []
-    for num in range((NUMBER_OF_ROOMS // 23) + 1):
-        my_list.append(random.choice(raumliste))
-    return my_list
+	my_list = []
+	for num in range((NUMBER_OF_ROOMS // 23) + 1):
+		my_list.append(random.choice(raumliste))
+	return my_list
 
 
 verbindungen_erzeugen()
@@ -189,7 +193,7 @@ startraeume = raumliste
 current_room = startraeume[random.randrange(len(startraeume))]
 final_room = raumliste[random.randrange(len(raumliste))]
 while final_room == current_room:
-    final_room = raumliste[random.randrange(len(raumliste))]
+	final_room = raumliste[random.randrange(len(raumliste))]
 
 command = ""
 hungerstatus = 100
@@ -199,59 +203,59 @@ usage()
 print("\n\tHave fun!\n")
 
 while (current_room is not None):
-    if raumwechsel_erfolgt:
-        print(f"\nYou see {description[current_room]}. ", end='')
-    else:
-        raumwechsel_erfolgt = True
-    hungerstatus = hungerstatus - 1
-    if check_starvation(hungerstatus):
-        current_room = None
-        continue
+	if raumwechsel_erfolgt:
+		print(f"\nYou see {description[current_room]}. ", end='')
+	else:
+		raumwechsel_erfolgt = True
+	hungerstatus = hungerstatus - 1
+	if check_starvation(hungerstatus):
+		current_room = None
+		continue
 
-    command = input("What do you want to do? ").lower()
-    while command not in allowed_commands:
-        command = input("No such command. What do you want to do? ").lower()
-    if command == "q":
-        quit()
-        current_room = None
-    elif command == "look":
-        zeige_rauminhalt()
-    elif command == "take":
-        if (take(current_room)):
-            current_room = None
-    elif command == "pray":
-        pray()
-    elif command == 'map':
-        generate_graphviz_file()
-    elif command == 'help':
-        usage()
-    elif command == 'where to go':
-        verbindungen_anzeigen(current_room)
-    elif command == 'where am i':
-        print(f"You are in room {current_room}")
-    # Look up whether a path that way exists and if so, go to that room
-    elif compass[command][current_room] is not None:
-        previous_room = current_room
-        current_room = compass[command][current_room]
-        locked_rooms = generate_locked_rooms()
-        if current_room in locked_rooms:
-            if not check_key():
-                current_room = previous_room
-        if current_room == final_room:
-            result = input(
-                "Do you really want to leave the caves? [yes/No] ").lower()
-            if result == "yes" or result == "y":
-                current_room = None
-                print("""
+	command = input("What do you want to do? ").lower()
+	while command not in allowed_commands:
+		command = input("No such command. What do you want to do? ").lower()
+	if command == "q":
+		quit()
+		current_room = None
+	elif command == "look":
+		zeige_rauminhalt()
+	elif command == "take":
+		if (take(current_room)):
+			current_room = None
+	elif command == "pray":
+		pray()
+	elif command == 'map':
+		generate_graphviz_file()
+	elif command == 'help':
+		usage()
+	elif command == 'where to go':
+		verbindungen_anzeigen(current_room)
+	elif command == 'where am i':
+		print(f"You are in room {current_room}")
+	# Look up whether a path that way exists and if so, go to that room
+	elif compass[command][current_room] is not None:
+		previous_room = current_room
+		current_room = compass[command][current_room]
+		locked_rooms = generate_locked_rooms()
+		if current_room in locked_rooms:
+			if not check_key():
+				current_room = previous_room
+		if current_room == final_room:
+			result = input(
+			    "Do you really want to leave the caves? [yes/No] ").lower()
+			if result == "yes" or result == "y":
+				current_room = None
+				print("""
 After all the hours spent in these interesting caves full of valuable treasures you decide to go out into the daylight.
 """)
-                print(
-                    "You step through the waterfall and walk out.\nJust like that, and now it's all over."
-                )
-            else:
-                continue
-        verbindungen_erzeugen()
+				print(
+				    "You step through the waterfall and walk out.\nJust like that, and now it's all over."
+				)
+			else:
+				continue
+		verbindungen_erzeugen()
 
-    else:
-        print("Boom. You bounce off. It doesn't go that way. ", end="")
-        raumwechsel_erfolgt = False
+	else:
+		print("Boom. You bounce off. It doesn't go that way. ", end="")
+		raumwechsel_erfolgt = False

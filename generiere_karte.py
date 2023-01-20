@@ -9,10 +9,7 @@
 
 # Feste Liste von idealerweise eindeutigen, nicht zu kurzen Namen für die Dictionaries
 # Diese Liste muss man vielleicht an sein eigenes Textadventure anpassen!
-dicts = [
-    'north', 'east', 'south', 'west', 'upward', 'upstairs', 'downward',
-    'downstairs', 'teleport', 'watchout'
-]
+dicts = ['w', 'a', 's', 'd', 'j', 'k']
 
 
 # Zerlege die gefundenen Dictionaries
