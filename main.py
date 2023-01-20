@@ -89,7 +89,7 @@ def quit():
 # Die kurze Anleitung gibt bisher einfach nur die Kommandowörter aus
 def usage():
     print ("\tThe following command words are known to the system:\n\n\t",end="")
-    for wort in allowed_directions:
+    for wort in allowed_commands:
         # Mache 'tp' (Teleport) zu einem geheimen Kommando
         if wort == "tp" or wort == 'teleport':
             pass
@@ -117,7 +117,7 @@ def generate_graphviz_file():
 
 # Where can I go from each direction?
 # j -> down ; k -> up ; q -> quit
-allowed_directions = ["q", "w", "a", "s", "d", "j", "k", "look", "take", "pray", "map", "help"]
+allowed_commands = ["q", "w", "a", "s", "d", "j", "k", "look", "take", "pray", "map", "help"]
 
 # Zufällig generierte Höhlen in fast beliebiger Zahl und Menge
 # Begrenzend ist die Zahl der nutzbaren Zeichen, aber man darf
@@ -136,7 +136,7 @@ beten 'pray', um ein neues Set Verbindungen zu erzeugen
 # generiert, und anschließend die speziellen Räume wieder gezielt
 # einzufügen.
 def generiere_ziel():
-    if random.random() > 0.70:  # 30% Wahrscheinlichkeit reicht bei 6 Richtungen
+    if random.random() > 0.50:
         return raumliste[random.randrange(len(raumliste))]
     else:
         return None
@@ -214,7 +214,7 @@ while( current_room is not None ):
 
     # Ask what they want to do and validate it (north, south, east, west only)
     command = input("Which direction do you want to go? ").lower()
-    while command not in allowed_directions:
+    while command not in allowed_commands:
         command = input("Which direction do you want to go? ").lower()
     # Man kann verhungern ...
     if command == "q":
