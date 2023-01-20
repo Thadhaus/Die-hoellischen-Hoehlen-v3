@@ -1,30 +1,18 @@
 # https://www.helloworld.cc - Heft 1 - Seite 52
 # Scary cave game -- Original Version CC BY-NC-SA 3.0
-# Diese modifizierte Version (C) 2022 Roland Härter r.haerter@wut.de
-#
-# Umgebaute Version von Ravenswood Manor. Hier ist kein Haus mehr,
-# sondern ein generiertes Set von Höhlen.
+# Diese modifizierte Version (C) 2023 Roland Härter r.haerter@wut.de
 
 import time
 import sys
 import random
 
 
-# Diese Funktion prüft, ob man einen Schlüssel für den Raum hat.
-# Zuerst einmal fragt sie den Spieler höflich, das reicht zum Testen.
 def check_key():
     key = input("Do you have the key? ").lower()
     if key in ["j", "ja", "y", "yes"]:
         return True
     else:
         return False
-
-
-'''
-# Eine Funktion für das Mitnehmen von Zeug, ursprünglich einmal mit fiesen Fallen
-# return: True -> du bist raus, also gestorben, hier nicht genutzt
-# Diese Funktion nimmt noch nichts mit, da dafür noch keine Datenstrukturen vorhanden sind
-'''
 
 
 def take(raum):
@@ -36,19 +24,14 @@ def take(raum):
     if ding == zeug:
         print(f"Each of the {anzahl} {zeug} is too heavy to take with you.")
         gefunden = True
-        ''' man sollte etwas essen können '''
         if zeug == 'lichen' and int(anzahl) > 0:
-            ''' außer Flechten gibt es nichts essbares in diesen Höhlen '''
             hungerstatus += random.randint(7, 24)
-            ''' die Flechten werden weniger '''
             rauminhalt[raum] = "{} {}".format(int(anzahl) - 1, zeug)
     if (gefunden == False):
         print("I see here no %s" % (ding))
     return False
 
 
-# Diese Funktion gibt den Hungerlevel aus
-# Andere Effekte können die Variable hungerstatus abfragen
 def check_starvation(hungerlevel):
     if hungerlevel < 1:
         print("You die from lack of food ...")
@@ -66,45 +49,31 @@ def check_starvation(hungerlevel):
     return False
 
 
-'''
- Beten hilft, wenn man keinen Ausweg hat. Das entspricht
- dem Spiel 'nethack', abgesehen von den fehlenden Göttern ...
-
- Hier könnte man das Spiel erweitern. Einen Zähler einbauen,
- und das Beten begrenzen. Oder Gegenrechnen mit erreichten Zielen...
- '''
-
-
 def pray():
     print("A strange trembling passes through the room.")
     verbindungen_erzeugen()
 
 
-# Zur Zeit ist nur das Biom in 'look_around' und der Rauminhalt ist
-# lediglich generiert
 def zeige_rauminhalt():
     inhalt = rauminhalt[current_room]
     print(inhalt)
 
 
-# Man kann das Spiel jederzeit verlassen.
 def quit():
     print("There is a bang. Smoke rises. You faint.")
-    for i in range(3):  # default: 23 Sekunden, Debug: 3 Sekunden
+    for i in range(3):
         time.sleep(1)
         print(".", end="")
-        sys.stdout.flush()  # damit die Punkte einzeln erscheinen
+        sys.stdout.flush()
     print("\n\nYou wake up in a meadow of flowers and wonder:")
     print("Was I really in those strange caves")
     print("or was it all just a strange dream?")
 
 
-# Die kurze Anleitung gibt bisher einfach nur die Kommandowörter aus
 def usage():
     print("\tThe following command words are known to the system:\n\n\t",
           end="")
     for wort in allowed_commands:
-        # Mache 'tp' (Teleport) zu einem geheimen Kommando
         if wort == "tp" or wort == 'teleport':
             pass
         else:
@@ -131,31 +100,15 @@ def generate_graphviz_file():
             os.system(f"rm -f {wunschdatei}")
 
 
-# Where can I go from each direction?
-# j -> down ; k -> up ; q -> quit
+# w a s d as usual; j -> down; k -> up; q -> quit
 allowed_commands = [
     "q", "w", "a", "s", "d", "j", "k", "look", "take", "pray", "map", "help"
 ]
 
-# Zufällig generierte Höhlen in fast beliebiger Zahl und Menge
-# Begrenzend ist die Zahl der nutzbaren Zeichen, aber man darf
-# UTF-8-Zeichen verwenden, wenn man möchte
 raumliste = list(
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-)  # 62 Räume billig erzeugt
-'''
-Hier werden die Verbindungen der Räume in der Raumliste
-zufällig verbunden, mit einer gewissen Wahrscheinlichkeit,
-damit es nicht zuviele Verbindungen gibt.
-Notfalls - wenn es keinen Ausweg gibt - kann der Spieler
-beten 'pray', um ein neues Set Verbindungen zu erzeugen
-'''
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789')
 
 
-# Was mir gut gefallen hat, ist die Idee, die speziellen Räume
-# aus der Raumliste zu nehmen, bevor man wilde zufällige Dinge
-# generiert, und anschließend die speziellen Räume wieder gezielt
-# einzufügen.
 def generiere_ziel():
     if random.random() > 0.50:
         return raumliste[random.randrange(len(raumliste))]
@@ -179,7 +132,6 @@ def verbindungen_erzeugen():
 
 verbindungen_erzeugen()
 
-# Put the directions into a compass dictionary
 compass = {
     "w": north,
     "a": west,
@@ -193,31 +145,21 @@ import metagenerator as generator
 
 raumbeschreibung, rauminhalt, raumbiome = generator.hauptprogramm(raumliste)
 description = raumbeschreibung
-look_around = raumbiome  # billiger 'hack', um überhaupt etwas in 'look_around' zu haben
-#rauminhalt = rauminhalt
+look_around = raumbiome
 
-# Put in the number of the room you want them to start in
-# Man kann das Spiel ein wenig spannender machen, in dem man
-# den Startraum zufällig wählt.
-# Das ist einfacher als ein ganzes Labyrinth zu generieren.
-# Reiner Zufall kann aber zu doofen Lösungen führen, deshalb ist hier
-# eine zufällige Auswahl aus einer Liste möglicher Starträume die Lösung
-startraeume = raumliste  ## [ 0, 9, 10, 18 ]
+startraeume = raumliste
 current_room = startraeume[random.randrange(len(startraeume))]
-# Put in the number of the final room
 final_room = raumliste[random.randrange(len(raumliste))]
 while final_room == current_room:
     final_room = raumliste[random.randrange(len(raumliste))]
 
-# ------------------------------------------------------------
-# Code to move around the map
-# ------------------------------------------------------------
 command = ""
 hungerstatus = 100
 raumwechsel_erfolgt = True
 print("\n\t*** Welcome to the hellish caves ***\n")
 usage()
 print("\n\tHave fun!\n")
+
 while (current_room is not None):
     if raumwechsel_erfolgt:
         print(f"\nYou are here: {description[current_room]}. ", end='')
@@ -228,20 +170,17 @@ while (current_room is not None):
         current_room = None
         continue
 
-    # Ask what they want to do and validate it (north, south, east, west only)
-    command = input("Which direction do you want to go? ").lower()
+    command = input("What do you want to do? ").lower()
     while command not in allowed_commands:
-        command = input("Which direction do you want to go? ").lower()
-    # Man kann verhungern ...
+        command = input("No such command. What do you want to do? ").lower()
     if command == "q":
-        quit()  #   das Spiel freiwillig aufgeben :-/
+        quit()
         current_room = None
     elif command == "look":
         zeige_rauminhalt()
     elif command == "take":
         if (take(current_room)):
-            current_room = None  # you managed to die :-)
-    # Wenn sonst nichts geht, kann man beten und bekommt neue Verbindungen.
+            current_room = None
     elif command == "pray":
         pray()
     elif command == 'map':
@@ -250,21 +189,16 @@ while (current_room is not None):
         usage()
     # Look up whether a path that way exists and if so, go to that room
     elif compass[command][current_room] is not None:
-        # Wenn man einen Raum nicht betreten kann oder darf,
-        # geht es wieder zurück, und man bleibt draußen
         previous_room = current_room
         current_room = compass[command][current_room]
-
-        # Es kann verschlossene Höhlen geben (nicht fragen), hier z.B. Raum B
-        if current_room == 'B':  # irgend ein Raum muss es sein, das ganze ist bislang nur ein Prototyp
+        if current_room == 'B':
             if not check_key():
                 current_room = previous_room
-        # See if they are in the final room
         if current_room == final_room:
             result = input(
                 "Do you really want to leave the caves? [yes/No] ").lower()
             if result == "yes" or result == "y":
-                current_room = None  # Ends the game loop
+                current_room = None
                 print("""
 After all the hours spent in these interesting caves full of valuable treasures you decide to go out into the daylight.
 """)
@@ -273,10 +207,7 @@ After all the hours spent in these interesting caves full of valuable treasures 
                 )
             else:
                 continue
-        # Erst und nur nach dem Wechsel in die nächste Höhle wird das Labyrinth neu vernetzt.
-        # Das gibt dem Spieler die Möglichkeit, verschiedene Richtungen zu probieren.
-        verbindungen_erzeugen(
-        )  # In der Hölle bleibt kein Weg, wo er eben noch war.
+        verbindungen_erzeugen()
 
     else:
         print("Boom. You bounce off. It doesn't go that way. ", end="")
