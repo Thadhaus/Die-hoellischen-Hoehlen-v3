@@ -6,6 +6,8 @@ import time
 import sys
 import random
 
+NUMBER_OF_ROOMS = 1000
+
 
 def check_key():
     key = input("Do you have the key? ").lower()
@@ -105,8 +107,15 @@ allowed_commands = [
     "q", "w", "a", "s", "d", "j", "k", "look", "take", "pray", "map", "help"
 ]
 
-raumliste = list(
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789')
+
+def create_roomlist():
+    roomlist = []
+    for num in range(NUMBER_OF_ROOMS):
+        roomlist.append(f"R{num}")
+    return roomlist
+
+
+raumliste = create_roomlist()
 
 
 def generiere_ziel():
