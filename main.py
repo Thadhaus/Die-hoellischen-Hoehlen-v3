@@ -12,7 +12,7 @@ import random
 # Diese Funktion prüft, ob man einen Schlüssel für den Raum hat.
 # Zuerst einmal fragt sie den Spieler höflich, das reicht zum Testen.
 def check_key():
-    key = input("Hast du den Schlüssel? ").lower()
+    key = input("Do you have the key? ").lower()
     if key in [ "j", "ja", "y", "yes" ]:
         return True
     else:
@@ -27,10 +27,10 @@ def take(raum):
     global hungerstatus
     global rauminhalt
     gefunden = False
-    ding = input("Was möchtest du nehmen? ").lower().rstrip()
+    ding = input("What do you want to take? ").lower().rstrip()
     anzahl,zeug = rauminhalt[raum].split(' ',1)
     if ding == zeug:
-        print (f"Jedes der {anzahl} {zeug} ist zu schwer zum Mitnehmen")
+        print (f"Each of the {anzahl} {zeug} is too heavy to take with you.")
         gefunden = True
         ''' man sollte etwas essen können '''
         if zeug == 'lichen' and int(anzahl) > 0:
@@ -39,23 +39,23 @@ def take(raum):
             ''' die Flechten werden weniger '''
             rauminhalt[raum] = "{} {}".format(int(anzahl)-1,zeug)
     if ( gefunden == False ):
-        print ("Ich sehe hier kein %s" % (ding) )
+        print ("I see here no %s" % (ding) )
     return False
 
 # Diese Funktion gibt den Hungerlevel aus
 # Andere Effekte können die Variable hungerstatus abfragen
 def check_starvation(hungerlevel):
     if hungerlevel < 1:
-        print ("Du stirbst an Nahrungsmangel ...")
+        print ("You die from lack of food ...")
         return True
     elif hungerlevel < 10:
-        print ("Du bist so schwach, dass du kaum noch gehen kannst.")
+        print ("You are so weak that you can hardly walk.")
     elif hungerlevel < 20:
-        print ("Dein Magen knurrt so laut, dass du Angst hast, Monster anzulocken.")
+        print ("Your stomach growls so loudly that you are afraid of attracting monsters.")
     elif hungerlevel < 50:
-        print ("Du fühlst dich schwach. Etwas zu Essen wäre jetzt gut.")
+        print ("You feel weak. Something to eat would be good now.")
     else:
-        print ("Es geht dir gut. Du bist satt und glücklich.")
+        print ("You are well. You are full and happy.")
     return False
 
 '''
@@ -66,7 +66,7 @@ def check_starvation(hungerlevel):
  und das Beten begrenzen. Oder Gegenrechnen mit erreichten Zielen...
  '''
 def pray():
-    print("Es geht ein seltsames Beben durch den Raum.")
+    print("A strange trembling passes through the room.")
     verbindungen_erzeugen()
 
 # Zur Zeit ist nur das Biom in 'look_around' und der Rauminhalt ist
@@ -77,19 +77,18 @@ def zeige_rauminhalt():
 
 # Man kann das Spiel jederzeit verlassen.
 def quit():
-    print ("Es knallt. Rauch steigt auf. Du fällst in Ohnmacht.")
+    print ("There is a bang. Smoke rises. You faint.")
     for i in range(3):      # default: 23 Sekunden, Debug: 3 Sekunden
         time.sleep(1)
         print (".",end="")
         sys.stdout.flush()  # damit die Punkte einzeln erscheinen
-    print ("\n\nDu wachst auf einer Blumenwiese auf und fragst dich:")
-    print ("War ich wirklich in diesen merkwürdigen Höhlen")
-    print ("oder war das alles nur ein seltsamer Traum?")
+    print ("\n\nYou wake up in a meadow of flowers and wonder:")
+    print ("Was I really in those strange caves")
+    print ("or was it all just a strange dream?")
 
 # Die kurze Anleitung gibt bisher einfach nur die Kommandowörter aus
 def usage():
-    print ("\n\t*** Willkommen in den höllischen Höhlen ***\n")
-    print ("\tFolgende Kommandowörter sind dem System bekannt:\n\n\t",end="")
+    print ("\tThe following command words are known to the system:\n\n\t",end="")
     for wort in allowed_directions:
         # Mache 'tp' (Teleport) zu einem geheimen Kommando
         if wort == "tp" or wort == 'teleport':
@@ -201,12 +200,11 @@ while final_room == current_room:
 command = ""
 hungerstatus = 100
 raumwechsel_erfolgt = True
-usage()     # Kurze Anleitung ausgeben
-# Keep asking them which direction to go in
+print ("\n\t*** Welcome to the hellish caves ***\n")
+usage()
 while( current_room is not None ):
-    # Describe the current room
     if raumwechsel_erfolgt:
-        print ( "\nDu befindest dich hier: {}. ".format(description[current_room]),end='')
+        print (f"\nYou are here: {description[current_room]}. ",end='')
     else:
         raumwechsel_erfolgt = True
     hungerstatus = hungerstatus - 1
@@ -247,14 +245,13 @@ while( current_room is not None ):
                 current_room = previous_room
         # See if they are in the final room
         if current_room == final_room:
-            result = input ("Willst du die Höhlen wirklich verlassen? [yes/No] ").lower()
+            result = input ("Do you really want to leave the caves? [yes/No] ").lower()
             if result == "yes" or result == "y":
                 current_room = None # Ends the game loop
                 print("""
-Nach all den Stunden in diesen interessanten Höhlen voller wertvoller Schätze
-beschließt du, jetzt doch einfach raus ans Tageslicht zu gehen.
+After all the hours spent in these interesting caves full of valuable treasures you decide to go out into the daylight.
 """)
-                print("Du schreitest durch den Wasserfall und gehst raus.\nEinfach so, und nun ist alles vorbei.")
+                print("You step through the waterfall and walk out.\nJust like that, and now it's all over.")
             else:
                 continue
         # Erst und nur nach dem Wechsel in die nächste Höhle wird das Labyrinth neu vernetzt.
@@ -262,6 +259,6 @@ beschließt du, jetzt doch einfach raus ans Tageslicht zu gehen.
         verbindungen_erzeugen() # In der Hölle bleibt kein Weg, wo er eben noch war.
 
     else:
-        print ("Bumm. Du prallst ab. In diese Richtung gibt es keinen Weg. ",end="")
+        print ("Boom. You bounce off. It doesn't go that way. ",end="")
         raumwechsel_erfolgt = False
 
