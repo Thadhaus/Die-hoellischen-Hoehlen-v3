@@ -5,7 +5,13 @@
 import time
 import sys
 import random
-
+'''
+# maybe one day we use color
+import colorama
+from colorama import Fore, Back, Style
+colorama.init(autoreset=True)
+print(f"The {Fore.RED}hellish {Fore.GREEN}caves!")
+'''
 NUMBER_OF_ROOMS = 2342
 
 
