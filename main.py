@@ -200,7 +200,7 @@ while (current_room is not None):
     elif compass[command][current_room] is not None:
         previous_room = current_room
         current_room = compass[command][current_room]
-        if current_room == 'B':
+        if current_room == random.choice(raumliste):
             if not check_key():
                 current_room = previous_room
         if current_room == final_room:
