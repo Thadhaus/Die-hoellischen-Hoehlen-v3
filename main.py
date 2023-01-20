@@ -116,10 +116,9 @@ def generate_graphviz_file():
       os.system(f"rm -f {wunschdatei}")
     
 
-    # Where can I go from each direction?
-allowed_directions = ["quit", "w", "a", "s", "d", "up", "down",
-    "go north", "go south", "go east", "go west", "tp", 'teleport',
-    "go up", "go down", "look", "take", "pray", "map"]
+# Where can I go from each direction?
+# j -> down ; k -> up ; q -> quit
+allowed_directions = ["q", "w", "a", "s", "d", "j", "k", "look", "take", "pray", "map", "help"]
 
 # Zufällig generierte Höhlen in fast beliebiger Zahl und Menge
 # Begrenzend ist die Zahl der nutzbaren Zeichen, aber man darf
@@ -138,48 +137,44 @@ beten 'pray', um ein neues Set Verbindungen zu erzeugen
 # generiert, und anschließend die speziellen Räume wieder gezielt
 # einzufügen.
 def generiere_ziel():
-    if random.random() > 0.70:  # 30% Wahrscheinlichkeit reicht bei 7 Richtungen
+    if random.random() > 0.70:  # 30% Wahrscheinlichkeit reicht bei 6 Richtungen
         return raumliste[random.randrange(len(raumliste))]
     else:
         return None
 
-# Sieben Richtungen sind eigentlich sinnlos, waren in der Vorlage vorhanden
 north = {}
 south = {}
 east = {}
 west = {}
-teleport = {}
 upstairs = {}
 downstairs = {}
 
 def verbindungen_erzeugen():
     for raum in raumliste:
-        for richtung in east, west, north, south, upstairs, downstairs, teleport:
+        for richtung in east, west, north, south, upstairs, downstairs:
             richtung[raum] = generiere_ziel()
-    #'''
+    '''
     # das folgende läuft gut unter Linux auch im repl.it ...
     # Ab hier dann für jedes Level einmal rausschreiben, wie es aussieht.
     # Diese Dateien kann man dann mit `generiere_karte.py` umwandeln
     import os
-    richtungsname = [ 'east', 'west', 'north', 'south', 'upstairs', 'downstairs', 'teleport' ]
+    richtungsname = [ 'east', 'west', 'north', 'south', 'upstairs', 'downstairs' ]
     os.system("mkdir -p Hoelle-Karten")
     datei = open (''.join(('Hoelle-Karten/',str(time.time()),'.py')), "w")
     nummer = 0
-    for richtung in east, west, north, south, upstairs, downstairs, teleport:
+    for richtung in east, west, north, south, upstairs, downstairs:
         datei.write("{} = ".format(richtungsname[nummer]))
         nummer += 1
         datei.write(str(richtung))
         datei.write("\n")
     datei.flush()
     datei.close()
-    #'''
+    '''
     
 verbindungen_erzeugen()
 
 # Put the directions into a compass dictionary
-compass = { "w": north, "a": west, "s": south, "d": east, "up": upstairs, "down": downstairs,
-        "go north": north, "go south": south, "go east": east, "go west": west,
-        "go up": upstairs, "go down": downstairs, "tp": teleport, "teleport": teleport }
+compass = { "w": north, "a": west, "s": south, "d": east, "k": upstairs, "j": downstairs }
 
 import metagenerator as generator
 raumbeschreibung, rauminhalt, raumbiome = generator.hauptprogramm(raumliste)
@@ -224,7 +219,7 @@ while( current_room is not None ):
     while command not in allowed_directions:
         command = input("Which direction do you want to go? ").lower()
     # Man kann verhungern ...
-    if command == "quit":
+    if command == "q":
         quit()      #   das Spiel freiwillig aufgeben :-/
         current_room = None
     elif command == "look":
@@ -237,6 +232,8 @@ while( current_room is not None ):
         pray()
     elif command == 'map':
         generate_graphviz_file()
+    elif command == 'help':
+        usage()
     # Look up whether a path that way exists and if so, go to that room
     elif compass[command][current_room] is not None:
         # Wenn man einen Raum nicht betreten kann oder darf,
