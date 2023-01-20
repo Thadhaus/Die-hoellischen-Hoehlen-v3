@@ -21,17 +21,24 @@ def check_key():
 def take(raum):
     global hungerstatus
     global rauminhalt
-    gefunden = False
     ding = input("What do you want to take? ").lower().rstrip()
     anzahl, zeug = rauminhalt[raum].split(' ', 1)
-    if ding == zeug:
-        print(f"Each of the {anzahl} {zeug} is too heavy to take with you.")
-        gefunden = True
-        if zeug == 'lichen' and int(anzahl) > 0:
-            hungerstatus += random.randint(7, 24)
-            rauminhalt[raum] = "{} {}".format(int(anzahl) - 1, zeug)
-    if (gefunden == False):
-        print("I see here no %s" % (ding))
+    if int(anzahl) > 0:
+        if ding == zeug:
+            if zeug == 'lichen':
+                print(
+                    "After creeping around such long time in these caves even lichen taste good."
+                )
+                hungerstatus += random.randint(7, 24)
+                rauminhalt[raum] = f"{int(anzahl) - 1} {zeug}"
+            else:
+                print(
+                    f"Each of the {anzahl} {zeug} is too heavy to take with you."
+                )
+        else:
+            print("I see here no %s" % (ding))
+    else:
+        print(f"There are no more {zeug} left.")
     return False
 
 
