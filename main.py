@@ -98,6 +98,7 @@ def usage():
     print ("\n\n\tViel Spaß\n")
 
 def generate_graphviz_file():
+  print ("Well, there are no maps to show...")
   import os
   import glob
   import generiere_karte
