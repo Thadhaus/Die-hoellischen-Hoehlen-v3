@@ -152,23 +152,7 @@ def verbindungen_erzeugen():
     for raum in raumliste:
         for richtung in east, west, north, south, upstairs, downstairs:
             richtung[raum] = generiere_ziel()
-    '''
-    # das folgende läuft gut unter Linux auch im repl.it ...
-    # Ab hier dann für jedes Level einmal rausschreiben, wie es aussieht.
-    # Diese Dateien kann man dann mit `generiere_karte.py` umwandeln
-    import os
-    richtungsname = [ 'east', 'west', 'north', 'south', 'upstairs', 'downstairs' ]
-    os.system("mkdir -p Hoelle-Karten")
-    datei = open (''.join(('Hoelle-Karten/',str(time.time()),'.py')), "w")
-    nummer = 0
-    for richtung in east, west, north, south, upstairs, downstairs:
-        datei.write("{} = ".format(richtungsname[nummer]))
-        nummer += 1
-        datei.write(str(richtung))
-        datei.write("\n")
-    datei.flush()
-    datei.close()
-    '''
+
     
 verbindungen_erzeugen()
 
