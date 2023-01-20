@@ -6,10 +6,11 @@ import time
 import sys
 import random
 
-NUMBER_OF_ROOMS = 1000
+NUMBER_OF_ROOMS = 2342
 
 
 def check_key():
+    print("This passage is locked. ", end='')
     key = input("Do you have the key? ").lower()
     if key in ["j", "ja", "y", "yes"]:
         return True
@@ -45,9 +46,9 @@ def check_starvation(hungerlevel):
             "Your stomach growls so loudly that you are afraid of attracting monsters."
         )
     elif hungerlevel < 50:
-        print("You feel weak. Something to eat would be good now.")
+        print("You feel weak. Something to eat would be great now.")
     else:
-        print("You are well. You are full and happy.")
+        print("You are well full and happy.")
     return False
 
 
@@ -76,7 +77,7 @@ def usage():
     print("\tThe following command words are known to the system:\n\n\t",
           end="")
     for wort in allowed_commands:
-        if wort == "tp" or wort == 'teleport':
+        if wort == "where am i" or wort == 'where to go':
             pass
         else:
             print("{} ".format(wort), end="")
@@ -104,7 +105,8 @@ def generate_graphviz_file():
 
 # w a s d as usual; j -> down; k -> up; q -> quit
 allowed_commands = [
-    "q", "w", "a", "s", "d", "j", "k", "look", "take", "pray", "map", "help"
+    "q", "w", "a", "s", "d", "j", "k", "look", "take", "pray", "map", "help",
+    "where am i", "where to go"
 ]
 
 
@@ -139,6 +141,20 @@ def verbindungen_erzeugen():
             richtung[raum] = generiere_ziel()
 
 
+def verbindungen_anzeigen(raum):
+    print(f"Verbindungen: ", end='')
+    for richtung in north, west, south, east, downstairs, upstairs:
+        print(f"{richtung[raum]} ", end='')
+    print("")
+
+
+def generate_locked_rooms():
+    my_list = []
+    for num in range((NUMBER_OF_ROOMS // 23) + 1):
+        my_list.append(random.choice(raumliste))
+    return my_list
+
+
 verbindungen_erzeugen()
 
 compass = {
@@ -171,7 +187,7 @@ print("\n\tHave fun!\n")
 
 while (current_room is not None):
     if raumwechsel_erfolgt:
-        print(f"\nYou are here: {description[current_room]}. ", end='')
+        print(f"\nYou see {description[current_room]}. ", end='')
     else:
         raumwechsel_erfolgt = True
     hungerstatus = hungerstatus - 1
@@ -196,11 +212,16 @@ while (current_room is not None):
         generate_graphviz_file()
     elif command == 'help':
         usage()
+    elif command == 'where to go':
+        verbindungen_anzeigen(current_room)
+    elif command == 'where am i':
+        print(f"You are in room {current_room}")
     # Look up whether a path that way exists and if so, go to that room
     elif compass[command][current_room] is not None:
         previous_room = current_room
         current_room = compass[command][current_room]
-        if current_room == random.choice(raumliste):
+        locked_rooms = generate_locked_rooms()
+        if current_room in locked_rooms:
             if not check_key():
                 current_room = previous_room
         if current_room == final_room:
