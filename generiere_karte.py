@@ -7,12 +7,6 @@
 # geschriebenen Textadventure als Bild darzustellen.
 # Verwende dazu graphviz, das gibt es für jede Plattform.
 
-# mit Farbe wird es bunter - siehe https://pypi.org/project/colorama/
-import colorama
-
-colorama.init(autoreset=True)
-from colorama import Fore, Back, Style
-
 # Feste Liste von idealerweise eindeutigen, nicht zu kurzen Namen für die Dictionaries
 # Diese Liste muss man vielleicht an sein eigenes Textadventure anpassen!
 dicts = [
@@ -38,7 +32,7 @@ def parse_direction(zeile):
     listenende = -1
     if rest.rstrip()[-1] == '\\':
         print(
-            f"{Fore.RED}Fortsetzungszeichen erkannt. Deine Karte wird nicht vollständig sein."
+            f"Fortsetzungszeichen erkannt. Deine Karte wird nicht vollständig sein."
         )
         listenende = -2
     # Das Ergebnis in eine Liste zurückverwandeln
