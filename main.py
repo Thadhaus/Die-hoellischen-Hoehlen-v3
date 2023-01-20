@@ -109,7 +109,7 @@ def usage():
             pass
         else:
             print("{} ".format(wort), end="")
-    print("\n\n\tHave fun!\n")
+    print("\n")
 
 
 def generate_graphviz_file():
@@ -217,6 +217,7 @@ hungerstatus = 100
 raumwechsel_erfolgt = True
 print("\n\t*** Welcome to the hellish caves ***\n")
 usage()
+print("\n\tHave fun!\n")
 while (current_room is not None):
     if raumwechsel_erfolgt:
         print(f"\nYou are here: {description[current_room]}. ", end='')
