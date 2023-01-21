@@ -109,16 +109,17 @@ def generate_graphviz_file():
     datei.close()
     result = glob.glob(r"Hoelle-Karten/*.py")
     if len(result) > 0:
-        print(f"Welche Datei soll in einen Graphen umgewandelt werden?")
+        print(f"Which file should be converted into a graph?")
         for i in range(len(result)):
             print(f"{i+1} : {result[i]}")
-        num = int(input("Gib mir die Nummer deiner Wunschdatei: "))
+        num = int(input("Give me the number of your file of choice: "))
         wunschdatei = result[num - 1]
         generiere_karte.hauptprogramm(wunschdatei)
-        antwort = input(f"Die Datei {wunschdatei} jetzt löschen? ").lower()
+        antwort = input(f"Delete the file {wunschdatei} now? ").lower()
         if antwort in ['y', 'j', 'yes', 'ja']:
             os.system(f"rm -f {wunschdatei}")
-
+    else:
+        print("No suitable file was found.")
 
 # w a s d as usual; j -> down; k -> up; q -> quit
 allowed_commands = [
