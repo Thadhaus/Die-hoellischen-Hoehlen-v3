@@ -94,7 +94,10 @@ def usage():
             pass
         else:
             print("{} ".format(wort), end="")
-    print("\n")
+    print("\n\n\tMovement with w a s d j k")
+    print("")
+    print("\tInside of replit you will end up outside the game")
+    print("\tafter quitting at a yellow Python prompt '>'")
 
 
 def generate_graphviz_file():
@@ -121,10 +124,11 @@ def generate_graphviz_file():
     else:
         print("No suitable file was found.")
 
+
 # w a s d as usual; j -> down; k -> up; q -> quit
 allowed_commands = [
-    "q", "w", "a", "s", "d", "j", "k", "look", "take", "pray", "map", "help",
-    "where am i", "where to go"
+    "w", "a", "s", "d", "j", "k", "look", "take", "pray", "map", "help",
+    "quit", "where am i", "where to go"
 ]
 
 
@@ -216,7 +220,7 @@ while (current_room is not None):
     command = input("What do you want to do? ").lower()
     while command not in allowed_commands:
         command = input("No such command. What do you want to do? ").lower()
-    if command == "q":
+    if command == "quit":
         quit()
         current_room = None
     elif command == "look":
