@@ -96,8 +96,10 @@ def usage():
             print("{} ".format(wort), end="")
     print("\n\n\tMovement with w a s d j k")
     print("")
-    print("\tInside of replit you will end up outside the game")
-    print("\tafter quitting at a yellow Python prompt '>'")
+    print("\tInside of replit after quitting you will end up")
+    print("\toutside the game at a yellow Python prompt '>'")
+    print("\tThere you may only use valid python code,")
+    print("\tbut all the game commands have disappeared.")
 
 
 def generate_graphviz_file():
@@ -127,7 +129,7 @@ def generate_graphviz_file():
 
 # w a s d as usual; j -> down; k -> up; q -> quit
 allowed_commands = [
-    "w", "a", "s", "d", "j", "k", "look", "take", "pray", "map", "help",
+    "w", "a", "s", "d", "j", "k", "help", "look", "take", "pray", "map",
     "quit", "where am i", "where to go"
 ]
 
@@ -264,3 +266,5 @@ After all the hours spent in these interesting caves full of valuable treasures 
     else:
         print("Boom. You bounce off. It doesn't go that way. ", end="")
         raumwechsel_erfolgt = False
+
+print("\n\t*** GAME OVER  ***\n")
