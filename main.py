@@ -60,6 +60,8 @@ def check_starvation(hungerlevel):
         )
     elif hungerlevel < 50:
         print("You feel weak. Something to eat would be great now.")
+    elif hungerlevel > 250:
+        print("Maybe you should pause eating lichen, your stomach is very full.")
     else:
         print("You are full and happy.")
     return False
