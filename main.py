@@ -165,6 +165,16 @@ def verbindungen_erzeugen():
     for raum in raumliste:
         for richtung in east, west, north, south, upstairs, downstairs:
             richtung[raum] = generiere_ziel()
+        raumzaehler = 0
+        for richtung in east, west, north, south, upstairs, downstairs:
+            if richtung[raum] is not None:
+                raumzaehler += 1
+        if raumzaehler == 0:
+            print (f"*** DEBUG Raum{raum} ",end="\n")
+            for richtung in east, west, north, south, upstairs, downstairs:
+                print(f"ALT: {richtung[raum]}  ",end="\n")
+                richtung[raum] = generiere_ziel()
+                print(f"NEU: {richtung[raum]}  ",end="\n")
 
 
 def verbindungen_anzeigen(raum):
