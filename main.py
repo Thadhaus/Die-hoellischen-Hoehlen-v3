@@ -195,9 +195,6 @@ def generate_locked_rooms():
 
 verbindungen_erzeugen()
 verbindungen_pruefen()
-# DEBUG
-for raum in raumliste:
-    verbindungen_anzeigen(raum)
 
 compass = {
     "w": north,
