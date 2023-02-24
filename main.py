@@ -167,6 +167,18 @@ def verbindungen_erzeugen():
             richtung[raum] = generiere_ziel()
 
 
+def verbindungen_pruefen():
+    for raum in raumliste:
+        raumzaehler = 0
+        for richtung in east, west, north, south, upstairs, downstairs:
+            if richtung[raum] is not None:
+                raumzaehler += 1
+        if raumzaehler == 0:
+            for richtung in east, west, north, south, upstairs, downstairs:
+                richtung[raum] = generiere_ziel()
+            verbindungen_pruefen()
+
+
 def verbindungen_anzeigen(raum):
     print(f"Verbindungen: ", end='')
     for richtung in north, west, south, east, downstairs, upstairs:
@@ -182,6 +194,7 @@ def generate_locked_rooms():
 
 
 verbindungen_erzeugen()
+verbindungen_pruefen()
 
 compass = {
     "w": north,
