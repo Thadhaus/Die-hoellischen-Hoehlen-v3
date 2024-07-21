@@ -42,7 +42,7 @@ def take(raum):
                     f"Each of the {anzahl} {zeug} is too heavy to take with you."
                 )
         else:
-            print("I see here no %s" % (ding))
+            print(f"I see here no {ding}")
     else:
         print(f"There are no more {zeug} left.")
     return False
@@ -78,14 +78,14 @@ def zeige_rauminhalt():
 
 
 def quit():
-    print("There is a bang. Smoke rises. You faint.")
+    print("There is a bang. Smoke rises. You faint.",end='')
     for i in range(3):
-        time.sleep(1)
         print(".", end="")
         sys.stdout.flush()
+        time.sleep(1)
     print("\n\nYou wake up in a meadow of flowers and wonder:")
-    print("Was I really in those strange caves")
-    print("or was it all just a strange dream?")
+    print("\tHave I really been in those peculiar caves")
+    print("\tor was it all just a strange dream?")
 
 
 def usage():
@@ -98,11 +98,12 @@ def usage():
             print("{} ".format(wort), end="")
     print("\n\n\tMovement with w a s d j k")
     print("")
+'''
     print("\tInside of replit after quitting you will end up")
     print("\toutside the game at a yellow Python prompt '>'")
     print("\tThere you may only use valid python code,")
     print("\tbut all the game commands have disappeared.")
-
+'''
 
 def generate_graphviz_file():
     import os
@@ -131,11 +132,13 @@ def generate_graphviz_file():
 
 # w a s d as usual; j -> down; k -> up; q -> quit
 allowed_commands = [
-    "w", "a", "s", "d", "j", "k", "help", "look", "take", "pray", "map",
+    "w", "a", "s", "d", "j", "k", "q", "help", "look", "take", "pray", "map",
     "quit", "where am i", "where to go"
 ]
 
 
+# This is the more elegant version to create really lots of rooms
+# compared to v2 of this game.
 def create_roomlist():
     roomlist = []
     for num in range(NUMBER_OF_ROOMS):
@@ -145,14 +148,6 @@ def create_roomlist():
 
 raumliste = create_roomlist()
 
-
-def generiere_ziel():
-    if random.random() > 0.50:
-        return raumliste[random.randrange(len(raumliste))]
-    else:
-        return None
-
-
 north = {}
 south = {}
 east = {}
@@ -160,28 +155,49 @@ west = {}
 upstairs = {}
 downstairs = {}
 
+compass = {
+    "w": north,
+    "a": west,
+    "s": south,
+    "d": east,
+    "k": upstairs,
+    "j": downstairs
+}
+
+# die RICHTUNGEN werden an mehreren Stellen benötigt
+RICHTUNGEN = []
+for richtung in compass:
+    RICHTUNGEN.append(compass[richtung])
+
+# this function will be called for all directions, so an
+# appropriate probability has to be chosen here
+def generiere_ziel():
+    if random.random() > 0.50:
+        return random.choice(raumliste)
+    else:
+        return None
 
 def verbindungen_erzeugen():
     for raum in raumliste:
-        for richtung in east, west, north, south, upstairs, downstairs:
+        for richtung in RICHTUNGEN:
             richtung[raum] = generiere_ziel()
 
 
 def verbindungen_pruefen():
     for raum in raumliste:
         raumzaehler = 0
-        for richtung in east, west, north, south, upstairs, downstairs:
+        for richtung in RICHTUNGEN:
             if richtung[raum] is not None:
                 raumzaehler += 1
         if raumzaehler == 0:
-            for richtung in east, west, north, south, upstairs, downstairs:
+            for richtung in RICHTUNGEN:
                 richtung[raum] = generiere_ziel()
             verbindungen_pruefen()
 
 
 def verbindungen_anzeigen(raum):
     print(f"Verbindungen: ", end='')
-    for richtung in north, west, south, east, downstairs, upstairs:
+    for richtung in RICHTUNGEN:
         print(f"{richtung[raum]} ", end='')
     print("")
 
@@ -196,26 +212,17 @@ def generate_locked_rooms():
 verbindungen_erzeugen()
 verbindungen_pruefen()
 
-compass = {
-    "w": north,
-    "a": west,
-    "s": south,
-    "d": east,
-    "k": upstairs,
-    "j": downstairs
-}
-
 import metagenerator as generator
 
 raumbeschreibung, rauminhalt, raumbiome = generator.hauptprogramm(raumliste)
 description = raumbeschreibung
 look_around = raumbiome
 
-startraeume = raumliste
-current_room = startraeume[random.randrange(len(startraeume))]
-final_room = raumliste[random.randrange(len(raumliste))]
+# set start and final room and make sure they are not the same room
+current_room = random.choice(raumliste)
+final_room = random.choice(raumliste)
 while final_room == current_room:
-    final_room = raumliste[random.randrange(len(raumliste))]
+    final_room = random.choice(raumliste)
 
 command = ""
 hungerstatus = 100
@@ -237,7 +244,7 @@ while (current_room is not None):
     command = input("What do you want to do? ").lower()
     while command not in allowed_commands:
         command = input("No such command. What do you want to do? ").lower()
-    if command == "quit":
+    if command == "quit" or command == 'q':
         quit()
         current_room = None
     elif command == "look":
