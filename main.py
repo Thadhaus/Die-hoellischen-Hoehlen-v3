@@ -284,6 +284,7 @@ After all the hours spent in these interesting caves full of valuable treasures 
             else:
                 continue
         verbindungen_erzeugen()
+        verbindungen_pruefen()
 
     else:
         print("Boom. You bounce off. It doesn't go that way. ", end="")
