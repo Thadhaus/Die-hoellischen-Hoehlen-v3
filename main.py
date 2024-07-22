@@ -1,6 +1,6 @@
 # https://www.helloworld.cc - Heft 1 - Seite 52
 # Scary cave game -- Original Version CC BY-NC-SA 3.0
-# Diese modifizierte Version (C) 2023 Roland Härter r.haerter@wut.de
+# Diese modifizierte Version (C) 2024 Roland Härter r.haerter@wut.de
 
 import time
 import sys
@@ -67,9 +67,10 @@ def check_starvation(hungerlevel):
     return False
 
 
+# this function should be obsolete by now ... should ...
 def pray():
     print("A strange trembling passes through the room.")
-    verbindungen_erzeugen()
+    verbindungen_erzeugen_und_prüfen()
 
 
 def zeige_rauminhalt():
@@ -172,7 +173,7 @@ for richtung in compass:
 # this function will be called for all directions, so an
 # appropriate probability has to be chosen here
 def generiere_ziel():
-    if random.random() > 0.50:
+    if random.random() > 0.75:
         return random.choice(raumliste)
     else:
         return None
@@ -208,9 +209,11 @@ def generate_locked_rooms():
         my_list.append(random.choice(raumliste))
     return my_list
 
+def verbindungen_erzeugen_und_prüfen():
+    verbindungen_erzeugen()
+    verbindungen_pruefen()
 
-verbindungen_erzeugen()
-verbindungen_pruefen()
+verbindungen_erzeugen_und_prüfen()
 
 import metagenerator as generator
 
@@ -283,8 +286,7 @@ After all the hours spent in these interesting caves full of valuable treasures 
                 )
             else:
                 continue
-        verbindungen_erzeugen()
-        verbindungen_pruefen()
+        verbindungen_erzeugen_und_prüfen()
 
     else:
         print("Boom. You bounce off. It doesn't go that way. ", end="")
