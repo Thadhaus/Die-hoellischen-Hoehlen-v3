@@ -1,21 +1,31 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# (c) 2022 r.haerter@wut.de
+# (c) 2024 r.haerter@wut.de
 #
 # Dies ist ein kleiner Helfer, um die Karte aus dem selbst
 # geschriebenen Textadventure als Bild darzustellen.
 # Verwende dazu graphviz, das gibt es für jede Plattform.
 
 # Feste Liste von idealerweise eindeutigen, nicht zu kurzen Namen für die Dictionaries
-# Diese Liste muss man vielleicht an sein eigenes Textadventure anpassen!
+# Diese Liste muss man bei Bedarf an sein eigenes Textadventure anpassen!
+# Diese Liste taucht in parse_direction() als Dictionary richtungen noch
+# einmal auf und muss auch mit angepasst werden!
 dicts = ['w', 'a', 's', 'd', 'j', 'k']
 
 
 # Zerlege die gefundenen Dictionaries
-# ToDo: Man könnte die Richtung nutzen, um die Pfeile in den
+# Die Richtung wird genutzt, um die Pfeile in den
 #       generierten Graphen zu beschriften
-def parse_direction(zeile):
+def parse_direction(zeile, _richtung):
+    richtungen = {
+        'nach_norden': "N",
+        'nach_süden' : "S",
+        'nach_osten' : "O",
+        'nach_westen': "W",
+        }
+    laufrichtung = richtungen[_richtung]
+
     try:
         richtung, rest = zeile.split('=')
     except:
@@ -24,7 +34,8 @@ def parse_direction(zeile):
         else:
             return 'fail'
     # Formatierungsartefakte entfernen
-    neu = rest.replace("'", "")
+    tmp = rest.replace("'", "")
+    neu = tmp.replace("{", "")
     rest = neu.replace(" ", "")
     listenende = -1
     if rest.rstrip()[-1] == '\\':
@@ -37,22 +48,25 @@ def parse_direction(zeile):
         verbindungsliste = list(rest[:-1].split(','))
     else:
         verbindungsliste = list(rest.strip()[1:listenende].split(','))
-    return (verbindungsliste)
+    sammlung = []
+    for ding in verbindungsliste:
+        ding = '/'.join((ding,laufrichtung))
+        sammlung.append(ding)
+    return (sammlung)
 
 
 def erzeuge_graph(vliste):
     ergebnis = ""
-    for element in vliste:
+    for _element in vliste:
+        element, richtung = _element.split('/',1)
         if element == '':
             pass
         else:
             von, nach = element.split(':')
-            if nach == 'None':
+            if nach == 'None' or nach == 'Nirgendwo' :
                 pass
             else:
-                if von.startswith('{'):
-                    von = von[1:]
-                result = f"{von}->{nach}\n"
+                result = f'{von}->{nach} [xlabel={richtung} fontcolor="#00ffaa"]\n'
                 ergebnis += result
     return (ergebnis)
 
@@ -102,6 +116,10 @@ def hauptprogramm(fname):
                 fortsetzung = False
                 komplett = True
         elif any(richtung in line for richtung in dicts):
+            try:
+                meine_richtung, _ = line.split('=',1)
+            except:
+                pass
             if '=' in line:
                 if ':' in line:
                     zeile += line.strip()
@@ -113,7 +131,7 @@ def hauptprogramm(fname):
                     komplett = True
                     fortsetzung = False
         if komplett == True:
-            result = parse_direction(zeile)
+            result = parse_direction(zeile, meine_richtung.strip() )
             zeile = ""
             if result == 'fail':
                 pass
@@ -127,9 +145,14 @@ def hauptprogramm(fname):
         "Um diese Datei in ein Bild umzuwandeln, brauchst du Graphviz: https://graphviz.org/"
     )
     print(
-        f"Damit kann jetzt mit dem Befehl 'neato -Tpng {gvname} > {filename}.png' ein Hausplan erstellt werden."
+        f"Damit kann jetzt mit dem Befehl 'neato -Tsvg {gvname} > {filename}.svg' ein Hausplan erstellt werden."
     )
 
 
+# Aliasname
+def generiere_karte(fname):
+    hauptprogramm(fname)
+
+
 if __name__ == '__main__':
-    hauptprogramm()
+    hauptprogramm('textadventure.py')
