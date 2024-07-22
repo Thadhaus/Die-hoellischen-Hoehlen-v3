@@ -19,10 +19,12 @@ dicts = ['w', 'a', 's', 'd', 'j', 'k']
 #       generierten Graphen zu beschriften
 def parse_direction(zeile, _richtung):
     richtungen = {
-        'nach_norden': "N",
-        'nach_süden' : "S",
-        'nach_osten' : "O",
-        'nach_westen': "W",
+        'w': "N",
+        'a': "W",
+        's' : "S",
+        'd' : "E",
+        'j': "D",
+        'k': "U",
         }
     laufrichtung = richtungen[_richtung]
 
