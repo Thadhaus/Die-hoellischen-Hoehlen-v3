@@ -187,13 +187,15 @@ def verbindungen_erzeugen():
 def verbindungen_pruefen():
     for raum in raumliste:
         raumzaehler = 0
-        for richtung in RICHTUNGEN:
-            if richtung[raum] is not None:
-                raumzaehler += 1
-        if raumzaehler == 0:
+        while raumzaehler == 0:
             for richtung in RICHTUNGEN:
-                richtung[raum] = generiere_ziel()
-            verbindungen_pruefen()
+                if richtung[raum] is not None:
+                    raumzaehler += 1
+                    break
+            if raumzaehler == 0:
+                for richtung in RICHTUNGEN:
+                    richtung[raum] = generiere_ziel()
+                #verbindungen_pruefen()
 
 
 def verbindungen_anzeigen(raum):
