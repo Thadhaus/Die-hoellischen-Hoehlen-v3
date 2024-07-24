@@ -28,6 +28,20 @@ def check_key():
 def eat(raum):
     take(raum, 'lichen')
 
+speisemeldungen = [
+    "After creeping around such long time in these caves even lichen taste good.",
+    "That was a yummy lichen.",
+    "This lichen was a bit tough.",
+    "That was a delicious lichen.",
+    "Lichen has rarely been so delicious.",
+    "A life without lichen would not be a true life.",
+    "This lichen was not really fresh.",
+    "This lichen would be even better with mustard.",
+    "This lichen was a little unripe.",
+    "This lichen would taste even better with a woodlouse.",
+    "This lichen is even tastier than broccoli.",
+    ]
+
 # you may only take some lichen to eat them
 def take(raum, ding = None):
     global hungerstatus
@@ -38,9 +52,7 @@ def take(raum, ding = None):
     if int(anzahl) > 0:
         if ding == zeug:
             if zeug == 'lichen':
-                print(
-                    "After creeping around such long time in these caves even lichen taste good."
-                )
+                print(random.choice(speisemeldungen))
                 hungerstatus += random.randint(7, 24)
                 rauminhalt[raum] = f"{int(anzahl) - 1} {zeug}"
             else:
