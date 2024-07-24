@@ -23,11 +23,17 @@ def check_key():
     else:
         return False
 
+# eat() is a convenience funtion to save you some typing
+# it also has an alias 'take lichen'
+def eat(raum):
+    take(raum, 'lichen')
 
-def take(raum):
+# you may only take some lichen to eat them
+def take(raum, ding = None):
     global hungerstatus
     global rauminhalt
-    ding = input("What do you want to take? ").lower().rstrip()
+    if not ding:
+        ding = input("What do you want to take? ").lower().rstrip()
     anzahl, zeug = rauminhalt[raum].split(' ', 1)
     if int(anzahl) > 0:
         if ding == zeug:
@@ -134,7 +140,7 @@ def generate_graphviz_file():
 # w a s d as usual; j -> down; k -> up; q -> quit
 allowed_commands = [
     "w", "a", "s", "d", "j", "k", "q", "help", "look", "take", "pray", "map",
-    "quit", "where am i", "where to go"
+    "quit", "where am i", "where to go", "eat", "take lichen"
 ]
 
 
@@ -265,6 +271,9 @@ while (current_room is not None):
     if command == "quit" or command == 'q':
         quit()
         current_room = None
+    # two convenience commands to simplify eating of lichen
+    elif command == "eat" or command == "take lichen":
+        eat(current_room)
     elif command == "look":
         zeige_rauminhalt()
     elif command == "take":
