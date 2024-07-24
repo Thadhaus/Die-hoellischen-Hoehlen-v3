@@ -29,6 +29,7 @@ def eat(raum):
     take(raum, 'lichen')
 
 speisemeldungen = [
+    "Lichens hate this trick.",
     "After creeping around such long time in these caves even lichen taste good.",
     "That was a yummy lichen.",
     "This lichen was a bit tough.",
