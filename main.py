@@ -153,16 +153,16 @@ north = {}
 south = {}
 east = {}
 west = {}
-upstairs = {}
 downstairs = {}
+upstairs = {}
 
 compass = {
     "w": north,
     "a": west,
     "s": south,
     "d": east,
+    "j": downstairs,
     "k": upstairs,
-    "j": downstairs
 }
 
 # die RICHTUNGEN werden an mehreren Stellen benötigt
