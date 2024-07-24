@@ -184,9 +184,16 @@ def verbindungen_erzeugen():
             richtung[raum] = generiere_ziel()
 
 
+# Check for at least on exit in every room
+# There are still some minor bugs possible:
+#  - rooms with no entrance
+#  - small loops like R1 -> R1 or R1 -> R2 -> R1
+# But these are not a problem at all due to the fact that the whole
+# world will be regenerated after /each/ move from one room to another
 def verbindungen_pruefen():
     for raum in raumliste:
         raumzaehler = 0
+        # loop over one room until it has an exit - no recursion needed
         while raumzaehler == 0:
             for richtung in RICHTUNGEN:
                 if richtung[raum] is not None:
@@ -195,7 +202,6 @@ def verbindungen_pruefen():
             if raumzaehler == 0:
                 for richtung in RICHTUNGEN:
                     richtung[raum] = generiere_ziel()
-                #verbindungen_pruefen()
 
 
 def verbindungen_anzeigen(raum):
@@ -236,7 +242,14 @@ print("\n\t*** Welcome to the hellish caves ***\n")
 usage()
 print("\n\tHave fun!\n")
 
+# DEBUG-Funktion
+def raumkontrolle(raum):
+    print(f"\nRaum {raum} - ", end='')
+    verbindungen_anzeigen(raum)
+
+
 while (current_room is not None):
+    raumkontrolle(current_room)
     if raumwechsel_erfolgt:
         print(f"\nYou see {description[current_room]}. ", end='')
     else:
