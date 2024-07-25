@@ -27,4 +27,4 @@ der Welt der modernen Spiele nicht mehr wegzudenken.
 ```
 
 2. Place some random keys in the caves, so the locked doors need their own key
-3. Fix the directions generated so the 'pray' function can be removed. To do so check for each room all six directions and make sure that they are not all 'None'
+
