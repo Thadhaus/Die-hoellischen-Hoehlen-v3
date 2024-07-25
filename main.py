@@ -203,7 +203,7 @@ def verbindungen_erzeugen():
             richtung[raum] = generiere_ziel()
 
 
-# Check for at least on exit in every room
+# Check for at least one exit in every room
 # There are still some minor bugs possible:
 #  - rooms with no entrance
 #  - small loops like R1 -> R1 or R1 -> R2 -> R1
